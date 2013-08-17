@@ -5,10 +5,10 @@
 static int nn_(SparseLinear_updateOutput)(lua_State *L)
 {
   long i;
-  THTensor * input = luaT_checkudata(L, 2, torch_Tensor);
-  THTensor * weight = luaT_getfieldcheckudata(L, 1, "weight", torch_Tensor);
-  THTensor * bias = luaT_getfieldcheckudata(L, 1, "bias", torch_Tensor);
-  THTensor * output = luaT_getfieldcheckudata(L, 1, "output", torch_Tensor);
+  THTensor * input = (THTensor*)luaT_checkudata(L, 2, torch_Tensor);
+  THTensor * weight = (THTensor*)luaT_getfieldcheckudata(L, 1, "weight", torch_Tensor);
+  THTensor * bias = (THTensor*)luaT_getfieldcheckudata(L, 1, "bias", torch_Tensor);
+  THTensor * output = (THTensor*)luaT_getfieldcheckudata(L, 1, "output", torch_Tensor);
   long dim = weight->size[0]; /* number of weights.. */
 
   THTensor_(copy)(output, bias);
@@ -35,13 +35,13 @@ static int nn_(SparseLinear_updateOutput)(lua_State *L)
 static int nn_(SparseLinear_accGradParameters)(lua_State *L)
 {
   long i;
-  THTensor * input = luaT_checkudata(L, 2, torch_Tensor);
-  THTensor * gradOutput = luaT_checkudata(L, 3, torch_Tensor);
+  THTensor * input = (THTensor*)luaT_checkudata(L, 2, torch_Tensor);
+  THTensor * gradOutput = (THTensor*)luaT_checkudata(L, 3, torch_Tensor);
   real scale = luaL_optnumber(L, 4, 1);
-  THTensor * weight = luaT_getfieldcheckudata(L, 1, "weight", torch_Tensor);
-  THTensor * gradBias = luaT_getfieldcheckudata(L, 1, "gradBias", torch_Tensor);
-  THTensor * gradWeight = luaT_getfieldcheckudata(L, 1, "gradWeight", torch_Tensor);
-  THTensor * lastInput = luaT_getfieldcheckudata(L, 1, "lastInput", torch_Tensor);
+  THTensor * weight = (THTensor*)luaT_getfieldcheckudata(L, 1, "weight", torch_Tensor);
+  THTensor * gradBias = (THTensor*)luaT_getfieldcheckudata(L, 1, "gradBias", torch_Tensor);
+  THTensor * gradWeight = (THTensor*)luaT_getfieldcheckudata(L, 1, "gradWeight", torch_Tensor);
+  THTensor * lastInput = (THTensor*)luaT_getfieldcheckudata(L, 1, "lastInput", torch_Tensor);
   real weightDecay = luaT_getfieldchecknumber(L, 1, "weightDecay");
   long dim = gradWeight->size[0]; /* number of weights.. */
 
@@ -83,11 +83,11 @@ int nn_(SparseLinear_updateParameters)(lua_State *L)
 {
   long i;
   real learningRate = luaL_checknumber(L, 2);
-  THTensor * weight = luaT_getfieldcheckudata(L, 1, "weight", torch_Tensor);
-  THTensor * bias = luaT_getfieldcheckudata(L, 1, "bias", torch_Tensor);
-  THTensor * gradBias = luaT_getfieldcheckudata(L, 1, "gradBias", torch_Tensor);
-  THTensor * gradWeight = luaT_getfieldcheckudata(L, 1, "gradWeight", torch_Tensor);
-  THTensor * lastInput = luaT_getfieldcheckudata(L, 1, "lastInput", torch_Tensor);
+  THTensor * weight = (THTensor*)luaT_getfieldcheckudata(L, 1, "weight", torch_Tensor);
+  THTensor * bias = (THTensor*)luaT_getfieldcheckudata(L, 1, "bias", torch_Tensor);
+  THTensor * gradBias = (THTensor*)luaT_getfieldcheckudata(L, 1, "gradBias", torch_Tensor);
+  THTensor * gradWeight = (THTensor*)luaT_getfieldcheckudata(L, 1, "gradWeight", torch_Tensor);
+  THTensor * lastInput = (THTensor*)luaT_getfieldcheckudata(L, 1, "lastInput", torch_Tensor);
   
   long dim = weight->size[0]; /* number of weights.. */
   THTensor_(cadd)(bias, bias, -learningRate, gradBias);

@@ -19,8 +19,8 @@ THStorage* THStorage_(new)(void)
 
 THStorage* THStorage_(newWithSize)(long size)
 {
-  THStorage *storage = THAlloc(sizeof(THStorage));
-  storage->data = THAlloc(sizeof(real)*size);
+  THStorage *storage = (THStorage*)THAlloc(sizeof(THStorage));
+  storage->data = (real*)THAlloc(sizeof(real)*size);
   storage->size = size;
   storage->refcount = 1;
   storage->flag = TH_STORAGE_REFCOUNTED | TH_STORAGE_RESIZABLE | TH_STORAGE_FREEMEM;
@@ -65,7 +65,7 @@ THStorage* THStorage_(newWithSize4)(real data0, real data1, real data2, real dat
 
 THStorage* THStorage_(newWithMapping)(const char *fileName, int isShared)
 {
-  THStorage *storage = THAlloc(sizeof(THStorage));
+  THStorage *storage = (THStorage*)THAlloc(sizeof(THStorage));
   long size;
 
   /* check size */
@@ -120,9 +120,9 @@ THStorage* THStorage_(newWithMapping)(const char *fileName, int isShared)
     /* map the stuff */
     storage = THStorage_(new)();
     if(isShared)
-      storage->data = MapViewOfFile(hmfile, FILE_MAP_ALL_ACCESS, 0, 0, 0);
+      storage->data = (real*)MapViewOfFile(hmfile, FILE_MAP_ALL_ACCESS, 0, 0, 0);
     else
-      storage->data = MapViewOfFile(hmfile, FILE_MAP_COPY, 0, 0, 0);
+      storage->data = (real*)MapViewOfFile(hmfile, FILE_MAP_COPY, 0, 0, 0);
       
     storage->size = size;
     if(storage->data == NULL)
@@ -230,7 +230,7 @@ void THStorage_(free)(THStorage *storage)
 
 THStorage* THStorage_(newWithData)(real *data, long size)
 {
-  THStorage *storage = THAlloc(sizeof(THStorage));
+  THStorage *storage = (THStorage*)THAlloc(sizeof(THStorage));
   storage->data = data;
   storage->size = size;
   storage->refcount = 1;
@@ -242,7 +242,7 @@ void THStorage_(resize)(THStorage *storage, long size)
 {
   if(storage->flag & TH_STORAGE_RESIZABLE)
   {
-    storage->data = THRealloc(storage->data, sizeof(real)*size);
+    storage->data = (real*)THRealloc(storage->data, sizeof(real)*size);
     storage->size = size;
   }
 }

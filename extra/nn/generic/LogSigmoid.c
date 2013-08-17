@@ -4,9 +4,9 @@
 
 static int nn_(LogSigmoid_updateOutput)(lua_State *L)
 {
-  THTensor *input = luaT_checkudata(L, 2, torch_Tensor);
-  THTensor *buffer = luaT_getfieldcheckudata(L, 1, "buffer", torch_Tensor);
-  THTensor *output = luaT_getfieldcheckudata(L, 1, "output", torch_Tensor);
+  THTensor *input = (THTensor*)luaT_checkudata(L, 2, torch_Tensor);
+  THTensor *buffer = (THTensor*)luaT_getfieldcheckudata(L, 1, "buffer", torch_Tensor);
+  THTensor *output = (THTensor*)luaT_getfieldcheckudata(L, 1, "output", torch_Tensor);
 
   THTensor_(resizeAs)(output, input);
   THTensor_(resizeAs)(buffer, input);
@@ -21,9 +21,9 @@ static int nn_(LogSigmoid_updateOutput)(lua_State *L)
 
 static int nn_(LogSigmoid_updateGradInput)(lua_State *L)
 {
-  THTensor *gradOutput = luaT_checkudata(L, 3, torch_Tensor);
-  THTensor *buffer = luaT_getfieldcheckudata(L, 1, "buffer", torch_Tensor);
-  THTensor *gradInput = luaT_getfieldcheckudata(L, 1, "gradInput", torch_Tensor);
+  THTensor *gradOutput = (THTensor*)luaT_checkudata(L, 3, torch_Tensor);
+  THTensor *buffer = (THTensor*)luaT_getfieldcheckudata(L, 1, "buffer", torch_Tensor);
+  THTensor *gradInput = (THTensor*)luaT_getfieldcheckudata(L, 1, "gradInput", torch_Tensor);
 
   THTensor_(resizeAs)(gradInput, buffer);
   TH_TENSOR_APPLY3(real, gradInput, real, gradOutput, real, buffer,    \

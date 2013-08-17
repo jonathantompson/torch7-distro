@@ -4,14 +4,14 @@
 
 static int nn_(VolumetricConvolution_updateOutput)(lua_State *L)
 {
-  THTensor *input = luaT_checkudata(L, 2, torch_Tensor);  
+  THTensor *input = (THTensor*)luaT_checkudata(L, 2, torch_Tensor);  
   int dT = luaT_getfieldcheckint(L, 1, "dT");
   int dW = luaT_getfieldcheckint(L, 1, "dW");
   int dH = luaT_getfieldcheckint(L, 1, "dH");
 
-  THTensor *weight = luaT_getfieldcheckudata(L, 1, "weight", torch_Tensor);
-  THTensor *bias = luaT_getfieldcheckudata(L, 1, "bias", torch_Tensor);
-  THTensor *output = luaT_getfieldcheckudata(L, 1, "output", torch_Tensor);
+  THTensor *weight = (THTensor*)luaT_getfieldcheckudata(L, 1, "weight", torch_Tensor);
+  THTensor *bias = (THTensor*)luaT_getfieldcheckudata(L, 1, "bias", torch_Tensor);
+  THTensor *output = (THTensor*)luaT_getfieldcheckudata(L, 1, "output", torch_Tensor);
 
   luaL_argcheck(L, input->nDimension == 4, 2, "4D tensor expected");
 
@@ -46,14 +46,14 @@ static int nn_(VolumetricConvolution_updateOutput)(lua_State *L)
 
 static int nn_(VolumetricConvolution_updateGradInput)(lua_State *L)
 {
-  THTensor *gradOutput = luaT_checkudata(L, 3, torch_Tensor);  
+  THTensor *gradOutput = (THTensor*)luaT_checkudata(L, 3, torch_Tensor);  
   int dT = luaT_getfieldcheckint(L, 1, "dT");
   int dW = luaT_getfieldcheckint(L, 1, "dW");
   int dH = luaT_getfieldcheckint(L, 1, "dH");
   int nOutputPlane = luaT_getfieldcheckint(L, 1, "nOutputPlane");
 
-  THTensor *weight = luaT_getfieldcheckudata(L, 1, "weight", torch_Tensor);
-  THTensor *gradInput = luaT_getfieldcheckudata(L, 1, "gradInput", torch_Tensor);
+  THTensor *weight = (THTensor*)luaT_getfieldcheckudata(L, 1, "weight", torch_Tensor);
+  THTensor *gradInput = (THTensor*)luaT_getfieldcheckudata(L, 1, "gradInput", torch_Tensor);
   
   THArgCheck( nOutputPlane == gradOutput->size[0], 1, "Number of output features is not equal to nOutputPlane" );
 
@@ -67,16 +67,16 @@ static int nn_(VolumetricConvolution_updateGradInput)(lua_State *L)
 
 static int nn_(VolumetricConvolution_accGradParameters)(lua_State *L)
 {
-  THTensor *input = luaT_checkudata(L, 2, torch_Tensor);  
-  THTensor *gradOutput = luaT_checkudata(L, 3, torch_Tensor);  
+  THTensor *input = (THTensor*)luaT_checkudata(L, 2, torch_Tensor);  
+  THTensor *gradOutput = (THTensor*)luaT_checkudata(L, 3, torch_Tensor);  
   real scale = luaL_optnumber(L, 4, 1);
   int dT = luaT_getfieldcheckint(L, 1, "dT");
   int dW = luaT_getfieldcheckint(L, 1, "dW");
   int dH = luaT_getfieldcheckint(L, 1, "dH");
   int nOutputPlane = luaT_getfieldcheckint(L, 1, "nOutputPlane");
 
-  THTensor *gradWeight = luaT_getfieldcheckudata(L, 1, "gradWeight", torch_Tensor);
-  THTensor *gradBias = luaT_getfieldcheckudata(L, 1, "gradBias", torch_Tensor);
+  THTensor *gradWeight = (THTensor*)luaT_getfieldcheckudata(L, 1, "gradWeight", torch_Tensor);
+  THTensor *gradBias = (THTensor*)luaT_getfieldcheckudata(L, 1, "gradBias", torch_Tensor);
   
   THArgCheck( nOutputPlane == gradOutput->size[0], 1, "Number of output features is not equal to nOutputPlane" );
 

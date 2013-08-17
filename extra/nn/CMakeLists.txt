@@ -7,6 +7,10 @@ SET(src init.c)
 FILE(GLOB luasrc *.lua)
 SET(luasrc ${luasrc} test/test.lua)
 
+IF (WIN32 AND MSVC)
+  SET_SOURCE_FILES_PROPERTIES(${src} PROPERTIES LANGUAGE CXX)
+ENDIF (WIN32 AND MSVC)
+
 ADD_TORCH_PACKAGE(nn "${src}" "${luasrc}")
 ADD_TORCH_DOK(dok nn "Machine Learning" "Neural Networks" 3.1)
 

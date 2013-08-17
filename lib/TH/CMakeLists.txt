@@ -10,8 +10,6 @@ SET(src
   THLogAdd.c THRandom.c
   THFile.c THDiskFile.c THMemoryFile.c)
 
-SET(src ${src} ${hdr})
-
 IF(UNIX)
   INCLUDE(CheckFunctionExists)
   SET(CMAKE_EXTRA_INCLUDE_FILES "sys/mman.h")
@@ -20,6 +18,10 @@ IF(UNIX)
     ADD_DEFINITIONS(-DHAVE_MMAP=1)
   ENDIF(HAVE_MMAP)
 ENDIF(UNIX)
+
+IF (WIN32 AND MSVC)
+  SET_SOURCE_FILES_PROPERTIES(${src} PROPERTIES LANGUAGE CXX)
+ENDIF (WIN32 AND MSVC)
 
 ADD_LIBRARY(TH SHARED ${src})
 

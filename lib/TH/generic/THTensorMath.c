@@ -1320,7 +1320,7 @@ accreal THTensor_(dist)(THTensor *tensor, THTensor *src, real value)
   real sum = 0;
   TH_TENSOR_APPLY2(real, tensor, real, src, 
 	sum += pow(fabs(*tensor_data - *src_data), value);)
-  return pow(sum, 1.0/value);
+  return pow(sum, (real)1.0/value);
 }
 
 accreal THTensor_(meanall)(THTensor *tensor)
@@ -1375,12 +1375,12 @@ void THTensor_(logspace)(THTensor *r_, real a, real b, long n)
   THTensor_(resize1d)(r_, n);
   if(n == 1) {
     TH_TENSOR_APPLY(real, r_,
-        *r__data = pow(10.0, a);
+        *r__data = pow((real)10.0, a);
         i++;
         );
   } else {
     TH_TENSOR_APPLY(real, r_,
-        *r__data = pow(10.0, a + i*(b-a)/((real)(n-1)));
+        *r__data = pow((real)10.0, a + i*(b-a)/((real)(n-1)));
         i++;
         );
   }

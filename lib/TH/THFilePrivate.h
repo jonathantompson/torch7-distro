@@ -41,3 +41,11 @@ struct THFileVTable
     void (*close)(THFile *self);
     void (*free)(THFile *self);
 };
+
+/* stupid windows stuff */
+
+#ifdef WIN32
+# define snprintf _snprintf
+# define popen _popen
+# define pclose _pclose
+#endif

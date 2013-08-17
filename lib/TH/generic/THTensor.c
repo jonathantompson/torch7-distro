@@ -72,7 +72,7 @@ static void THTensor_(rawResize)(THTensor *self, int nDimension, long *size, lon
 /* Empty init */
 THTensor *THTensor_(new)(void)
 {
-  THTensor *self = THAlloc(sizeof(THTensor));
+  THTensor *self = (THTensor*)THAlloc(sizeof(THTensor));
   THTensor_(rawInit)(self);
   return self;
 }
@@ -80,7 +80,7 @@ THTensor *THTensor_(new)(void)
 /* Pointer-copy init */
 THTensor *THTensor_(newWithTensor)(THTensor *tensor)
 {
-  THTensor *self = THAlloc(sizeof(THTensor));
+  THTensor *self = (THTensor*)THAlloc(sizeof(THTensor));
   THTensor_(rawInit)(self);
   THTensor_(rawSet)(self,
                     tensor->storage,
@@ -94,7 +94,7 @@ THTensor *THTensor_(newWithTensor)(THTensor *tensor)
 /* Storage init */
 THTensor *THTensor_(newWithStorage)(THStorage *storage, long storageOffset, THLongStorage *size, THLongStorage *stride)
 {  
-  THTensor *self = THAlloc(sizeof(THTensor));
+  THTensor *self = (THTensor*)THAlloc(sizeof(THTensor));
   if(size && stride)
     THArgCheck(size->size == stride->size, 4, "inconsistent size");
 
@@ -138,7 +138,7 @@ THTensor *THTensor_(newWithStorage4d)(THStorage *storage, long storageOffset,
   long size[4] = {size0, size1, size2, size3};
   long stride[4] = {stride0, stride1, stride2, stride3};
 
-  THTensor *self = THAlloc(sizeof(THTensor));
+  THTensor *self = (THTensor*)THAlloc(sizeof(THTensor));
   THTensor_(rawInit)(self);  
   THTensor_(rawSet)(self, storage, storageOffset, 4, size, stride);
 
@@ -169,7 +169,7 @@ THTensor *THTensor_(newWithSize4d)(long size0, long size1, long size2, long size
 {
   long size[4] = {size0, size1, size2, size3};
 
-  THTensor *self = THAlloc(sizeof(THTensor));
+  THTensor *self = (THTensor*)THAlloc(sizeof(THTensor));
   THTensor_(rawInit)(self);  
   THTensor_(rawResize)(self, 4, size, NULL);
 
@@ -431,8 +431,8 @@ void THTensor_(unfold)(THTensor *self, THTensor *src, int dimension, long size, 
 
   THTensor_(set)(self, src);
 
-  newSize = THAlloc(sizeof(long)*(self->nDimension+1));
-  newStride = THAlloc(sizeof(long)*(self->nDimension+1));
+  newSize = (long*)THAlloc(sizeof(long)*(self->nDimension+1));
+  newStride = (long*)THAlloc(sizeof(long)*(self->nDimension+1));
 
   newSize[self->nDimension] = size;
   newStride[self->nDimension] = self->stride[dimension];
@@ -650,8 +650,8 @@ static void THTensor_(rawResize)(THTensor *self, int nDimension, long *size, lon
   {
     if(nDimension != self->nDimension)
     {
-      self->size = THRealloc(self->size, sizeof(long)*nDimension);
-      self->stride = THRealloc(self->stride, sizeof(long)*nDimension);
+      self->size = (long*)THRealloc(self->size, sizeof(long)*nDimension);
+      self->stride = (long*)THRealloc(self->stride, sizeof(long)*nDimension);
       self->nDimension = nDimension;
     }
   

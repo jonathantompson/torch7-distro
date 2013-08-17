@@ -4,7 +4,7 @@
 
 static int nn_(MultiLabelMarginCriterion_updateOutput)(lua_State *L)
 {
-  THTensor *input = luaT_checkudata(L, 2, torch_Tensor);  
+  THTensor *input = (THTensor*)luaT_checkudata(L, 2, torch_Tensor);  
   int sizeAverage = luaT_getfieldcheckboolean(L, 1, "sizeAverage");
   real *input_data, *target_data;
   long nframe, dim;
@@ -18,14 +18,14 @@ static int nn_(MultiLabelMarginCriterion_updateOutput)(lua_State *L)
   {
     nframe = 1;
     dim = input->size[0]; 
-    target = luaT_checkudata(L, 3, torch_Tensor);
+    target = (THTensor*)luaT_checkudata(L, 3, torch_Tensor);
     THArgCheck((target->nDimension == 1) && (target->size[0] == dim), 3, "inconsistent target size");
   }
   else
   {
     nframe = input->size[0];
     dim = input->size[1];
-    target = luaT_checkudata(L, 3, torch_Tensor);
+    target = (THTensor*)luaT_checkudata(L, 3, torch_Tensor);
     THArgCheck((target->nDimension == 2) && (target->size[0] == nframe) && (target->size[1] == dim), 3, "inconsistent target size");
   }
 
@@ -85,9 +85,9 @@ static int nn_(MultiLabelMarginCriterion_updateOutput)(lua_State *L)
 
 static int nn_(MultiLabelMarginCriterion_updateGradInput)(lua_State *L)
 {
-  THTensor *input = luaT_checkudata(L, 2, torch_Tensor);
+  THTensor *input = (THTensor*)luaT_checkudata(L, 2, torch_Tensor);
   int sizeAverage = luaT_getfieldcheckboolean(L, 1, "sizeAverage");
-  THTensor *gradInput = luaT_getfieldcheckudata(L, 1, "gradInput", torch_Tensor);
+  THTensor *gradInput = (THTensor*)luaT_getfieldcheckudata(L, 1, "gradInput", torch_Tensor);
   real *input_data;
   real *gradInput_data;
   real *target_data;
@@ -102,14 +102,14 @@ static int nn_(MultiLabelMarginCriterion_updateGradInput)(lua_State *L)
   {
     nframe = 1;
     dim = input->size[0]; 
-    target = luaT_checkudata(L, 3, torch_Tensor);
+    target = (THTensor*)luaT_checkudata(L, 3, torch_Tensor);
     THArgCheck((target->nDimension == 1) && (target->size[0] == dim), 3, "inconsistent target size");
   }
   else
   {
     nframe = input->size[0];
     dim = input->size[1];
-    target = luaT_checkudata(L, 3, torch_Tensor);
+    target = (THTensor*)luaT_checkudata(L, 3, torch_Tensor);
     THArgCheck((target->nDimension == 2) && (target->size[0] == nframe) && (target->size[1] == dim), 3, "inconsistent target size");
   }
 

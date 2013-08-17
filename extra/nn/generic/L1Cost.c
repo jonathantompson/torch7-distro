@@ -4,7 +4,7 @@
 
 static int nn_(L1Cost_updateOutput)(lua_State *L)
 {
-  THTensor *input = luaT_checkudata(L, 2, torch_Tensor);  
+  THTensor *input = (THTensor*)luaT_checkudata(L, 2, torch_Tensor);  
   accreal sum;
 
   sum = 0;
@@ -19,8 +19,8 @@ static int nn_(L1Cost_updateOutput)(lua_State *L)
 
 static int nn_(L1Cost_updateGradInput)(lua_State *L)
 {
-  THTensor *input = luaT_checkudata(L, 2, torch_Tensor);
-  THTensor *gradInput = luaT_getfieldcheckudata(L, 1, "gradInput", torch_Tensor);
+  THTensor *input = (THTensor*)luaT_checkudata(L, 2, torch_Tensor);
+  THTensor *gradInput = (THTensor*)luaT_getfieldcheckudata(L, 1, "gradInput", torch_Tensor);
 
   THTensor_(resizeAs)(gradInput, input);
   TH_TENSOR_APPLY2(real, gradInput, real, input,

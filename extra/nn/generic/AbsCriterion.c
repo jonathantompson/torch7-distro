@@ -4,8 +4,8 @@
 
 static int nn_(AbsCriterion_updateOutput)(lua_State *L)
 {
-  THTensor *input = luaT_checkudata(L, 2, torch_Tensor);  
-  THTensor *target = luaT_checkudata(L, 3, torch_Tensor);  
+  THTensor *input = (THTensor*)luaT_checkudata(L, 2, torch_Tensor);  
+  THTensor *target = (THTensor*)luaT_checkudata(L, 3, torch_Tensor);  
   int sizeAverage = luaT_getfieldcheckboolean(L, 1, "sizeAverage");
   real sum;
 
@@ -25,10 +25,10 @@ static int nn_(AbsCriterion_updateOutput)(lua_State *L)
 
 static int nn_(AbsCriterion_updateGradInput)(lua_State *L)
 {
-  THTensor *input = luaT_checkudata(L, 2, torch_Tensor);
-  THTensor *target = luaT_checkudata(L, 3, torch_Tensor);
+  THTensor *input = (THTensor*)luaT_checkudata(L, 2, torch_Tensor);
+  THTensor *target = (THTensor*)luaT_checkudata(L, 3, torch_Tensor);
   int sizeAverage = luaT_getfieldcheckboolean(L, 1, "sizeAverage");
-  THTensor *gradInput = luaT_getfieldcheckudata(L, 1, "gradInput", torch_Tensor);
+  THTensor *gradInput = (THTensor*)luaT_getfieldcheckudata(L, 1, "gradInput", torch_Tensor);
   real norm = (sizeAverage ? 1./((real)THTensor_(nElement)(input)) : 1.);
 
   THTensor_(resizeAs)(gradInput, input);

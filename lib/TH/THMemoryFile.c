@@ -334,7 +334,7 @@ READ_WRITE_METHODS(double, Double,
 
 static char* THMemoryFile_cloneString(const char *str, long size)
 {
-  char *cstr = THAlloc(size);
+  char *cstr = (char*)THAlloc(size);
   memcpy(cstr, str, size);
   return cstr;
 }
@@ -468,7 +468,7 @@ THFile *THMemoryFile_newWithStorage(THCharStorage *storage, const char *mode)
     storage->data[0] = '\0';
   }
 
-  mfself = THAlloc(sizeof(THMemoryFile));
+  mfself = (THMemoryFile*)THAlloc(sizeof(THMemoryFile));
 
   mfself->storage = storage;
   mfself->size = (storage ? storage->size-1 : 0);

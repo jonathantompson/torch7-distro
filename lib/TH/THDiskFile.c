@@ -95,7 +95,7 @@ size_t fread__(void *ptr, size_t size, size_t nitems, FILE *stream)
       {                                                                 \
         if(sizeof(TYPE) > 1)                                            \
         {                                                               \
-          char *buffer = THAlloc(sizeof(TYPE)*n);                       \
+          char *buffer = (char*)THAlloc(sizeof(TYPE)*n);                \
           THDiskFile_reverseMemory(buffer, data, sizeof(TYPE), n);      \
           nwrite = fwrite(buffer, sizeof(TYPE), n, dfself->handle);     \
           THFree(buffer);                                               \
@@ -326,7 +326,7 @@ static long THDiskFile_readString(THFile *self, const char *format, char **str_)
 
   if(format[1] == 'a')
   {
-    char *p = THAlloc(TBRS_BSZ);
+    char *p = (char*)THAlloc(TBRS_BSZ);
     long total = TBRS_BSZ;
     long pos = 0L;
     
@@ -335,7 +335,7 @@ static long THDiskFile_readString(THFile *self, const char *format, char **str_)
       if(total-pos == 0) /* we need more space! */
       {
         total += TBRS_BSZ;
-        p = THRealloc(p, total);
+        p = (char*)THRealloc(p, total);
       }
       pos += fread(p+pos, 1, total-pos, dfself->handle);
       if (pos < total) /* eof? */
@@ -357,7 +357,7 @@ static long THDiskFile_readString(THFile *self, const char *format, char **str_)
   }
   else
   {
-    char *p = THAlloc(TBRS_BSZ);
+    char *p = (char*)THAlloc(TBRS_BSZ);
     long total = TBRS_BSZ;
     long pos = 0L;
     long size;
@@ -367,7 +367,7 @@ static long THDiskFile_readString(THFile *self, const char *format, char **str_)
       if(total-pos <= 1) /* we can only write '\0' in there! */
       {
         total += TBRS_BSZ;
-        p = THRealloc(p, total);
+        p = (char*)THRealloc(p, total);
       }
       if (fgets(p+pos, total-pos, dfself->handle) == NULL) /* eof? */
       {
@@ -484,10 +484,10 @@ THFile *THDiskFile_new(const char *name, const char *mode, int isQuiet)
       THError("cannot open <%s> in mode %c%c", name, (isReadable ? 'r' : ' '), (isWritable ? 'w' : ' '));
   }
 
-  self = THAlloc(sizeof(THDiskFile));
+  self = (THDiskFile*)THAlloc(sizeof(THDiskFile));
 
   self->handle = handle;
-  self->name = THAlloc(strlen(name)+1);
+  self->name = (char*)THAlloc(strlen(name)+1);
   strcpy(self->name, name);
   self->isNativeEncoding = 1;
 
@@ -585,10 +585,10 @@ THFile *THPipeFile_new(const char *name, const char *mode, int isQuiet)
       THError("cannot open <%s> in mode %c%c", name, (isReadable ? 'r' : ' '), (isWritable ? 'w' : ' '));
   }
 
-  self = THAlloc(sizeof(THDiskFile));
+  self = (THDiskFile*)THAlloc(sizeof(THDiskFile));
 
   self->handle = handle;
-  self->name = THAlloc(strlen(name)+1);
+  self->name = (char*)THAlloc(strlen(name)+1);
   strcpy(self->name, name);
   self->isNativeEncoding = 1;
 

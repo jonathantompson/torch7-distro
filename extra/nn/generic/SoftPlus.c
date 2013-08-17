@@ -4,8 +4,8 @@
 
 static int nn_(SoftPlus_updateOutput)(lua_State *L)
 {
-  THTensor *input = luaT_checkudata(L, 2, torch_Tensor);
-  THTensor *output = luaT_getfieldcheckudata(L, 1, "output", torch_Tensor);
+  THTensor *input = (THTensor*)luaT_checkudata(L, 2, torch_Tensor);
+  THTensor *output = (THTensor*)luaT_getfieldcheckudata(L, 1, "output", torch_Tensor);
   
   THTensor_(resizeAs)(output, input);
 
@@ -17,9 +17,9 @@ static int nn_(SoftPlus_updateOutput)(lua_State *L)
 
 static int nn_(SoftPlus_updateGradInput)(lua_State *L)
 {
-  THTensor *gradOutput = luaT_checkudata(L, 3, torch_Tensor);
-  THTensor *output = luaT_getfieldcheckudata(L, 1, "output", torch_Tensor);
-  THTensor *gradInput = luaT_getfieldcheckudata(L, 1, "gradInput", torch_Tensor);
+  THTensor *gradOutput = (THTensor*)luaT_checkudata(L, 3, torch_Tensor);
+  THTensor *output = (THTensor*)luaT_getfieldcheckudata(L, 1, "output", torch_Tensor);
+  THTensor *gradInput = (THTensor*)luaT_getfieldcheckudata(L, 1, "gradInput", torch_Tensor);
 
   THTensor_(resizeAs)(gradInput, output);
   TH_TENSOR_APPLY3(real, gradInput, real, gradOutput, real, output,    \
