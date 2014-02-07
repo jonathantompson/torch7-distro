@@ -136,6 +136,17 @@ __global__ void subgradweight(float *input, float *gradOutput, float *gradWeight
   }
 }
 
+__device__ inline void MyAtomicAdd(float *address, float value)
+{
+  int oldval, newval, readback; 
+  oldval = __float_as_int(*address);
+  newval = __float_as_int(__int_as_float(oldval) + value);
+  while ((readback=atomicCAS((int *)address, oldval, newval)) != oldval) {
+    oldval = readback;
+    newval = __float_as_int(__int_as_float(oldval) + value);
+  }
+}
+
 /*
  * Description:
  *    this function computes the gradInput from weight and gradOutput
@@ -179,12 +190,21 @@ __global__ void subgradinput(float *gradInput, float *gradOutput, float *weight,
       float z = *ptr_gradOutput * the_weight;
       int kx, ky;
       for(ky = 0; ky < kH; ky++) {
-        for(kx = 0; kx < kW; kx++)
-          ptr_gradInput[kx] += z;
+        for(kx = 0; kx < kW; kx++) {
+          // ptr_gradInput[kx] += z;
+          // Perform an atomicAdd here to prevent race conditions between
+          // threads.  This situation occurs when dW != kW or dH != kH.
+          // Note: atomic operations on global memory is very slow! 
+          
+          atomicAdd(&ptr_gradInput[kx], z);
+          // MyAtomicAdd(&ptr_gradInput[kx], z);
+          //__syncthreads();
+        }
         ptr_gradInput += input_w;
       }
     }
   }
+  __syncthreads();
 }
 
 static int cunn_SpatialSubSampling_updateOutput(lua_State *L)
@@ -280,8 +300,8 @@ static int cunn_SpatialSubSampling_updateGradInput(lua_State *L)
   int dH = luaT_getfieldcheckint(L, 1, "dH");
   int nInputPlane = luaT_getfieldcheckint(L, 1, "nInputPlane");
 
-  luaL_argcheck(L, dW == kW, 1, "dW and kW must be equal (this will be fixed soon)");
-  luaL_argcheck(L, dH == kH, 1, "dH and kH must be equal (this will be fixed soon)");
+  // luaL_argcheck(L, dW == kW, 1, "dW and kW must be equal (this will be fixed soon)");
+  // luaL_argcheck(L, dH == kH, 1, "dH and kH must be equal (this will be fixed soon)");
 
   THCudaTensor *weight = (THCudaTensor *)luaT_getfieldcheckudata(L, 1, "weight", "torch.CudaTensor");
   THCudaTensor *gradInput = (THCudaTensor *)luaT_getfieldcheckudata(L, 1, "gradInput", "torch.CudaTensor");

@@ -97,7 +97,7 @@ include('CosineEmbeddingCriterion.lua')
 include('MarginRankingCriterion.lua')
 include('MultiMarginCriterion.lua')
 include('MultiLabelMarginCriterion.lua')
-include('L1Cost.lua')
+--include('L1Cost.lua')
 include('WeightedMSECriterion.lua')
 
 include('StochasticGradient.lua')
